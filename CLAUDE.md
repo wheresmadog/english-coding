@@ -21,6 +21,8 @@ All skills set `disable-model-invocation: true` — they run only on explicit `/
 ### code-to-conv (`/code-to-conv`)
 Structured exploration from the working tree into a discussion-ready briefing. Does not create issues or edit code. Suggests `/conv-to-issue` when ready to freeze work.
 
+On the first turn a conversation invokes the skill, fills in `templates/conv.md`: a numbered, one-sentence-per-item "Current behavior" list, then a "Future directions" section grouped by candidate key change (`### <name>: <one sentence>`, same naming style `/conv-to-issue` later freezes). Later turns in the same conversation continue as normal discussion instead of re-rendering the template.
+
 ### conv-to-issue (`/conv-to-issue`)
 Interview → draft from `templates/issue.md` → approval loop → `gh issue create`. Stops after the issue exists (no worktree, no plan mode).
 
@@ -48,6 +50,7 @@ Requires same session as a completed `/issue-to-plan`, cwd already in the issue 
 .claude-plugin/marketplace.json         # local marketplace catalog (source: "./")
 .cursor-plugin/plugin.json              # Cursor plugin manifest (name, version, author)
 skills/code-to-conv/SKILL.md
+skills/code-to-conv/templates/conv.md
 skills/conv-to-issue/SKILL.md
 skills/conv-to-issue/templates/issue.md
 skills/issue-to-plan/SKILL.md
