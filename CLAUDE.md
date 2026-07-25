@@ -1,4 +1,4 @@
-# pattern-based-dev-plugin
+# english-coding
 
 A Claude Code plugin that ships one workflow skill. Skills are plain markdown files — no compilation. A separate session-start hook, unscoped to the skill, fires once per session and requires `jq`.
 
@@ -52,7 +52,7 @@ Manifest format references: [Claude Code plugins](https://code.claude.com/docs/e
 
 ## Repository
 
-Public: https://github.com/wheresmadog/pattern-based-dev-plugin
+Public: https://github.com/wheresmadog/english-coding
 
 ## Constraints
 

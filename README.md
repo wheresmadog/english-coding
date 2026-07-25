@@ -1,4 +1,4 @@
-# pattern-based-dev-plugin
+# english-coding
 
 ## Features
 
@@ -21,8 +21,8 @@ gh auth status
 Once published to GitHub, anyone can install it directly:
 
 ```bash
-/plugin marketplace add https://github.com/wheresmadog/pattern-based-dev-plugin
-/plugin install pattern-based-dev-plugin@pattern-based-dev-plugin
+/plugin marketplace add https://github.com/wheresmadog/english-coding
+/plugin install english-coding@english-coding
 ```
 
 ### Cursor
@@ -30,11 +30,11 @@ Once published to GitHub, anyone can install it directly:
 Clone (or symlink, for local development) the repo directly into Cursor's local plugins directory — this repo's layout already has `.cursor-plugin/plugin.json` at its root, matching what Cursor expects:
 
 ```bash
-git clone https://github.com/wheresmadog/pattern-based-dev-plugin ~/.cursor/plugins/local/pattern-based-dev-plugin
+git clone https://github.com/wheresmadog/english-coding ~/.cursor/plugins/local/english-coding
 ```
 
 ```bash
-ln -s /path/to/pattern-based-dev-plugin ~/.cursor/plugins/local/pattern-based-dev-plugin
+ln -s /path/to/english-coding ~/.cursor/plugins/local/english-coding
 ```
 
 Then restart Cursor, or run **Developer: Reload Window**.
