@@ -14,16 +14,12 @@ Review the current conversation and any referenced files or directories. Search 
 
 Produce:
 
-- Current behavior (what the code does today)
-- Pain points or gaps driving the discussion
-- Candidate key changes (short names + one-sentence intent each)
-- Constraints and decisions already made
-- Rejected alternatives (if any)
-- Open questions that still block a crisp issue
+- Current behavior: what the code does today, as a numbered list of one-sentence items
+- Candidate key changes (short names + one-sentence intent each), each with its problem/motivation and how it works
 
 ## 3. Present a briefing
 
-Give the user a short structured briefing they can continue discussing. Prefer the same key-change naming style that `/conv-to-issue` will later freeze (`<name>: <one sentence>`).
+On the first turn a conversation invokes `/code-to-conv`, fill in the template at `templates/conv.md`. On later turns in the same conversation, continue the discussion in normal prose — do not re-render the full template.
 
 ## 4. Stop
 
