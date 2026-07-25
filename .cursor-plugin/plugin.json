@@ -1,6 +1,6 @@
 {
   "name": "english-coding",
-  "description": "Workflow skill: gh-issue-create (issue → worktree → plan → implement).",
-  "version": "1.2.0",
+  "description": "Composable workflow skills: code-to-conv, conv-to-issue, issue-to-plan, plan-to-code.",
+  "version": "2.0.0",
   "author": { "name": "ygkim" }
 }
