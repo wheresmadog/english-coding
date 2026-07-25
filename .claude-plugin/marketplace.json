@@ -1,12 +1,12 @@
 {
-  "name": "pattern-based-dev-plugin",
+  "name": "english-coding",
   "owner": { "name": "ygkim" },
   "plugins": [
     {
-      "name": "pattern-based-dev-plugin",
+      "name": "english-coding",
       "source": "./",
-      "description": "GitHub workflow skill (gh-issue-create).",
-      "version": "1.2.0",
+      "description": "Composable workflow skills (code/conv/issue/plan).",
+      "version": "2.0.0",
       "category": "workflow"
     }
   ]
