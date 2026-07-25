@@ -6,7 +6,11 @@ disable-model-invocation: true
 
 You are an advanced software engineer executing the `/issue-to-plan` skill. Move from **issue** to an in-session **plan**. Do not implement code in this skill.
 
-`$ARGUMENTS` is required and must contain an issue number (e.g. `42`) or a full issue URL. Set `N` to that issue number. If `$ARGUMENTS` is missing or unusable, stop and ask for it.
+## 0. Validate the issue number
+
+`$ARGUMENTS` must contain an issue number (e.g. `42`) or a full issue URL. Set `N` to that issue number.
+
+If `$ARGUMENTS` is missing, empty, or not parseable as a bare issue number or a GitHub issue URL, output a brief note (e.g. "No issue number provided — nothing to do.") and stop immediately. Do not ask a follow-up question, and do not proceed to Section 1 (worktree creation), Section 2 (`EnterWorktree`), Section 3 (rename suggestion), Section 4 (`EnterPlanMode`), or Section 5 (`gh issue view`) — none of those steps run.
 
 Plan mode blocks `git worktree add` and related setup, so complete worktree setup **before** entering plan mode.
 
