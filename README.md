@@ -6,7 +6,7 @@ Workflow skills around **code ↔ conv/plan ↔ issue**.
 
 | Skill | Invocation | Purpose |
 |-------|-----------|---------|
-| **code-to-conv** | `/code-to-conv` | Explore the working tree into a structured briefing for discussion. Does not create issues or edit code. |
+| **code-to-conv** | `/code-to-conv` | Explain a module's architecture and mechanisms, then suggest quality/feature directions. Does not create issues or edit code. |
 | **conv-to-issue** | `/conv-to-issue` | Freeze a discussion into an approved GitHub issue (four-section body). Stops after the issue exists. |
 | **conv-to-code** | `/conv-to-code` | Same-session execute after `/conv-to-issue`: worktree, plan from conversation context, implement and verify. Requires a frozen issue. |
 | **issue-to-code** | `/issue-to-code <issue>` | Cold-start execute: load an issue into a worktree, plan, implement and verify by key change. |

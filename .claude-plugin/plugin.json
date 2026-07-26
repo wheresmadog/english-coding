@@ -1,7 +1,7 @@
 {
   "name": "english-coding",
   "description": "Composable workflow skills: code-to-conv, conv-to-issue, conv-to-code, issue-to-code.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "author": { "name": "ygkim" },
   "keywords": ["github", "issues", "workflow", "gh", "plan"]
 }
