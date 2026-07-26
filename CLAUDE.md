@@ -53,7 +53,7 @@ Plan shape (both execute skills): one `## <key change name>` section per issue k
 ## Plugin structure
 
 ```
-AGENTS.md                               # thin pointer to CLAUDE.md for AGENTS.md readers
+AGENTS.md                               # CLAUDE.md pointer + Cursor Cloud env notes
 .claude-plugin/plugin.json              # name, version, author, keywords
 .claude-plugin/marketplace.json         # local marketplace catalog (source: "./")
 .cursor-plugin/plugin.json              # Cursor plugin manifest (name, version, author)
