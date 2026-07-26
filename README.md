@@ -8,14 +8,14 @@ Workflow skills around **code ↔ conv/plan ↔ issue**.
 |-------|-----------|---------|
 | **code-to-conv** | `/code-to-conv` | Explore the working tree into a structured briefing for discussion. Does not create issues or edit code. |
 | **conv-to-issue** | `/conv-to-issue` | Freeze a discussion into an approved GitHub issue (four-section body). Stops after the issue exists. |
-| **issue-to-plan** | `/issue-to-plan <issue>` | Load an issue into a worktree, enter plan mode, and approve an in-session plan organized by key change. Does not implement. |
-| **plan-to-code** | `/plan-to-code` | Execute the approved in-session plan from `/issue-to-plan` (same session only). |
+| **conv-to-code** | `/conv-to-code` | Same-session execute after `/conv-to-issue`: worktree, plan from conversation context, implement and verify. Requires a frozen issue. |
+| **issue-to-code** | `/issue-to-code <issue>` | Cold-start execute: load an issue into a worktree, plan, implement and verify by key change. |
 
-Capture path: **code → conv → issue**. Execute path: **issue → plan → code**. Plan is in-session only — run `/plan-to-code` in the same chat as `/issue-to-plan`.
+Capture path: **code → conv → issue**. Happy-path execute (same session): **conv → code** via `/conv-to-code` after `/conv-to-issue`. Cold start: **issue → code** via `/issue-to-code <N>`. Plan is an in-skill phase of the two `*-to-code` skills (in-session only). Coding always requires a frozen GitHub issue; worktrees are always `issue-<N>`.
 
 ## Prerequisite
 
-Skills that talk to GitHub (`conv-to-issue`, `issue-to-plan`) shell out to the GitHub CLI (`gh`). Verify it is installed and authenticated before use:
+Skills that talk to GitHub (`conv-to-issue`, `issue-to-code`) shell out to the GitHub CLI (`gh`). Verify it is installed and authenticated before use:
 
 ```bash
 gh auth status

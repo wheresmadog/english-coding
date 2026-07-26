@@ -1,18 +1,18 @@
 ---
-name: issue-to-plan
-description: "Load a GitHub issue into a worktree, enter plan mode, and draft an approved in-session plan organized by key change. Does not implement — run /plan-to-code next in the same session."
+name: issue-to-code
+description: "Cold-start execute: load a GitHub issue into a worktree, enter plan mode, approve an in-session plan, then implement and verify by key change. Owns worktree + plan + code — no separate plan-to-code step."
 disable-model-invocation: true
 ---
 
-You are an advanced software engineer executing the `/issue-to-plan` skill. Move from **issue** to an in-session **plan**. Do not implement code in this skill.
+You are an advanced software engineer executing the `/issue-to-code` skill. Move from **issue** through an in-session **plan** to **code**. Coding always requires a frozen GitHub issue; worktree naming is always `issue-<N>`.
+
+Plan mode blocks `git worktree add` and related setup, so complete worktree setup **before** entering plan mode. Plan is an internal phase of this skill — do not hand off to another skill to start coding.
 
 ## 0. Validate the issue number
 
 `$ARGUMENTS` must contain an issue number (e.g. `42`) or a full issue URL. Set `N` to that issue number.
 
-If `$ARGUMENTS` is missing, empty, or not parseable as a bare issue number or a GitHub issue URL, output a brief note (e.g. "No issue number provided — nothing to do.") and stop immediately. Do not ask a follow-up question, and do not proceed to Section 1 (worktree creation), Section 2 (`EnterWorktree`), Section 3 (rename suggestion), Section 4 (`EnterPlanMode`), or Section 5 (`gh issue view`) — none of those steps run.
-
-Plan mode blocks `git worktree add` and related setup, so complete worktree setup **before** entering plan mode.
+If `$ARGUMENTS` is missing, empty, or not parseable as a bare issue number or a GitHub issue URL, output a brief note (e.g. "No issue number provided — nothing to do.") and stop immediately. Do not ask a follow-up question, and do not proceed to later sections — none of those steps run.
 
 ## 1. Create the worktree
 
@@ -78,18 +78,34 @@ For each key change, include a section that demonstrates the implementation logi
 2. ...
 ```
 
-The plan's key-change sections are the source of truth that `/plan-to-code` will walk.
+The plan's key-change sections are the source of truth for the implement phase below.
 
 ## 8. Approve the plan
 
-Call `ExitPlanMode` to get approval. **Stop after the plan is approved.** Do not implement.
+Call `ExitPlanMode` to get approval. Do not implement until the plan is approved.
 
-## 9. Hand off (same session)
+## 9. Confirm the plan
 
-The plan is **in-session only** — no plan file, no issue comment. Tell the user to run the next skill **in this same chat**:
+Briefly restate the key-change sections you will execute, in order, using the same names as the approved plan / issue.
 
-```
-/plan-to-code
-```
+Do not re-enter plan mode or re-draft the plan unless the user explicitly asks to replan.
 
-If they start a new session, the plan is gone and they must re-run `/issue-to-plan <N>`.
+## 10. Execute by key-change section
+
+Walk the plan **by key-change section**, in order.
+
+For each key change:
+
+1. Implement the numbered logic steps for that section.
+2. Stay within the scope of that key change before moving on.
+3. After the section's code is in place, verify against that change's **Manual Verifications** from the issue (behavior guidelines — not a generic test-suite dump). Prefer observable behavior checks aligned with those guidelines; run automated tests only when they directly support verifying the behavior change.
+
+Do not skip ahead to later key changes while an earlier one is unfinished.
+
+## 11. Finish
+
+When every key-change section is done and verified:
+
+- Summarize what changed, keyed by key-change name.
+- Note any leftover risks or follow-ups.
+- Do not create a PR unless the user asks.

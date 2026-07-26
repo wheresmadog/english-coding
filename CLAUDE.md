@@ -5,13 +5,16 @@ A Claude Code plugin that ships four composable workflow skills around **code �
 ## Model
 
 ```
-code ──code-to-conv──► conv/plan ──conv-to-issue──► issue
-code ◄──plan-to-code── conv/plan ◄──issue-to-plan── issue
+code ──code-to-conv──► conv ──conv-to-issue──► issue
+code ◄──conv-to-code── conv
+code ◄──issue-to-code──────────────────────── issue
 ```
 
 - Capture: **code → conv → issue**
-- Execute: **issue → plan → code**
-- Middle phase is **conv** on capture, **plan** (in-session only) on execute
+- Execute (happy path, same session): **conv → code** via `/conv-to-code` after `/conv-to-issue`
+- Execute (cold start): **issue → code** via `/issue-to-code <N>`
+- Plan is an **in-skill phase** of the two `*-to-code` skills (in-session only) — not a separate skill
+- Coding always requires a frozen GitHub issue first; worktrees are always `issue-<N>`
 - No orchestrator skill — compose the four skills explicitly
 
 ## Skills
@@ -35,13 +38,17 @@ Issue body is exactly four sections, keyed by shared key-change names:
 
 When editing an existing issue, writes the complete final state — no changelog prose.
 
-### issue-to-plan (`/issue-to-plan <issue>`)
-`$ARGUMENTS` = issue number or URL (required). `git worktree add ../issue-<N>` → `EnterWorktree` → suggest `/rename issue-<N>` → `EnterPlanMode` → `gh issue view` → extract key changes → targeted exploration → draft plan by key-change section → `ExitPlanMode`. Stops after plan approval.
+Suggests `/conv-to-code` (same session) or `/issue-to-code <N>` (cold start).
 
-Plan shape: one `## <key change name>` section per issue key change; numbered implementation logic (1–2 sentences each); file/symbol refs live here. Plan is **in-session only** — tell the user to run `/plan-to-code` in the same chat.
+### conv-to-code (`/conv-to-code`)
+Same-session execute after `/conv-to-issue`. Requires the issue number from that freeze already known in the conversation; refuses (and points to `/conv-to-issue` or `/issue-to-code <N>`) otherwise. Does not create an issue and does not allow coding from an unfrozen conv.
 
-### plan-to-code (`/plan-to-code`)
-Requires same session as a completed `/issue-to-plan`, cwd already in the issue worktree, and an approved plan. Walks key-change sections in order; after each, verifies against that change's Manual Verifications (behavior guidelines). Refuses and points back to `/issue-to-plan` if preconditions fail.
+`git worktree add ../issue-<N>` → `EnterWorktree` → suggest `/rename issue-<N>` → `EnterPlanMode` → draft plan from **conversation context** (do not re-`gh issue view` as the primary source) → `ExitPlanMode` → implement by key-change section → verify against Manual Verifications.
+
+### issue-to-code (`/issue-to-code <issue>`)
+Cold-start execute. `$ARGUMENTS` = issue number or URL (required). `git worktree add ../issue-<N>` → `EnterWorktree` → suggest `/rename issue-<N>` → `EnterPlanMode` → `gh issue view` → extract key changes → targeted exploration → draft plan by key-change section → `ExitPlanMode` → implement by key-change section → verify against Manual Verifications.
+
+Plan shape (both execute skills): one `## <key change name>` section per issue key change; numbered implementation logic (1–2 sentences each); file/symbol refs live here. Plan is **in-session only**.
 
 ## Plugin structure
 
@@ -53,8 +60,8 @@ skills/code-to-conv/SKILL.md
 skills/code-to-conv/templates/conv.md
 skills/conv-to-issue/SKILL.md
 skills/conv-to-issue/templates/issue.md
-skills/issue-to-plan/SKILL.md
-skills/plan-to-code/SKILL.md
+skills/conv-to-code/SKILL.md
+skills/issue-to-code/SKILL.md
 hooks/hooks.json                        # plugin-level hook registry, auto-discovered
 hooks/doc-scoping-context.sh            # SessionStart hook (requires jq)
 ```
@@ -84,9 +91,9 @@ Public: https://github.com/wheresmadog/english-coding
 
 ## Constraints
 
-- `conv-to-issue` and `issue-to-plan` interact with GitHub and require `gh` CLI authenticated (`gh auth status`).
+- `conv-to-issue` and `issue-to-code` interact with GitHub and require `gh` CLI authenticated (`gh auth status`). `/conv-to-code` needs an issue already created in-session but does not call `gh issue view` as its planning source.
 - `disable-model-invocation: true` means each skill runs as a direct instruction set, not a sub-model call — keep the instructions self-contained and deterministic.
-- Plan mode is entered only inside `issue-to-plan` via `EnterPlanMode` — not forced upfront by a hook, so `conv-to-issue`'s `gh issue create` and `issue-to-plan`'s `git worktree add` are not blocked.
-- Session rename has no programmatic path — `issue-to-plan` suggests `/rename issue-<N>`. Hooks can only set a title at `SessionStart`, which `EnterWorktree` does not trigger.
+- Plan mode is entered only inside `conv-to-code` / `issue-to-code` via `EnterPlanMode` — not forced upfront by a hook, so `conv-to-issue`'s `gh issue create` and the execute skills' `git worktree add` are not blocked.
+- Session rename has no programmatic path — execute skills suggest `/rename issue-<N>`. Hooks can only set a title at `SessionStart`, which `EnterWorktree` does not trigger.
 - `.claude/settings.local.json` contains a local `ANTHROPIC_BASE_URL` override — do not commit this file to a public repo.
 - `hooks/doc-scoping-context.sh` requires `jq`; it degrades to a no-op (exit 1, stderr note) if `jq` is missing, meaning the session simply starts without the doc-scoping context.

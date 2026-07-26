@@ -119,8 +119,16 @@ If issue creation fails:
 
 Do not create a worktree, do not enter plan mode, and do not implement. Suggest next steps when relevant:
 
+Same session (preferred after this freeze):
+
 ```
-/issue-to-plan <N>
+/conv-to-code
+```
+
+Cold start later / in a new session:
+
+```
+/issue-to-code <N>
 ```
 
 ## Editing an existing issue
