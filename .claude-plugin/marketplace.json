@@ -5,8 +5,8 @@
     {
       "name": "english-coding",
       "source": "./",
-      "description": "Composable workflow skills (code/conv/issue/plan).",
-      "version": "2.0.0",
+      "description": "Composable workflow skills (code/conv/issue).",
+      "version": "2.1.0",
       "category": "workflow"
     }
   ]

@@ -53,9 +53,11 @@ Plan shape (both execute skills): one `## <key change name>` section per issue k
 ## Plugin structure
 
 ```
+AGENTS.md                               # CLAUDE.md pointer + Cursor Cloud env notes
 .claude-plugin/plugin.json              # name, version, author, keywords
 .claude-plugin/marketplace.json         # local marketplace catalog (source: "./")
 .cursor-plugin/plugin.json              # Cursor plugin manifest (name, version, author)
+.cursor/rules/suggest-version-bump.mdc  # Cursor always-on version-bump suggestion rule
 skills/code-to-conv/SKILL.md
 skills/code-to-conv/templates/conv.md
 skills/conv-to-issue/SKILL.md
@@ -83,7 +85,25 @@ Manifest format references: [Claude Code plugins](https://code.claude.com/docs/e
    ---
    ```
 3. Write the skill body in markdown below the front-matter.
-4. No changes to `plugin.json` or `marketplace.json` needed.
+4. Update skill docs (`CLAUDE.md` / `README.md`) as needed, then suggest bumping the three version fields when the skill surface changes (see Version bumps).
+
+## Version bumps
+
+After any change that ships plugin behavior or docs users rely on (skills, hooks, manifests, README/CLAUDE skill surface), **suggest** a semver bump before finishing — do not silently skip it.
+
+Keep all three version fields in sync:
+
+- `.claude-plugin/plugin.json`
+- `.claude-plugin/marketplace.json`
+- `.cursor-plugin/plugin.json`
+
+Semver guidance:
+
+- **Major:** removed/renamed skills or other breaking invocation changes
+- **Minor:** new backward-compatible skill/capability
+- **Patch:** docs/hooks/copy fixes with no skill-surface change
+
+Suggestion only unless the user already asked to bump.
 
 ## Repository
 

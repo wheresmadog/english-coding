@@ -1,0 +1,22 @@
+---
+description: Suggest a semver bump whenever plugin updates land
+alwaysApply: true
+---
+
+# Suggest version bumps on updates
+
+After any change that ships plugin behavior or docs users rely on (skills, hooks, manifests, README/CLAUDE skill surface), **suggest** a semver bump before finishing — do not silently skip it.
+
+Keep all three version fields in sync:
+
+- `.claude-plugin/plugin.json`
+- `.claude-plugin/marketplace.json`
+- `.cursor-plugin/plugin.json`
+
+Semver guidance:
+
+- **Major:** removed/renamed skills or other breaking invocation changes
+- **Minor:** new backward-compatible skill/capability
+- **Patch:** docs/hooks/copy fixes with no skill-surface change
+
+Suggestion only unless the user already asked to bump.

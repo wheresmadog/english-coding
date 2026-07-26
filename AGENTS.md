@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Project agent instructions live in [`CLAUDE.md`](CLAUDE.md). Read and follow that file.
+
 ## Cursor Cloud specific instructions
 
 This repo is a **Claude Code / Cursor plugin** (`english-coding`) made of markdown skills plus a
