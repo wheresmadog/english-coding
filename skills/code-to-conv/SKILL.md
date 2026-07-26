@@ -12,7 +12,15 @@ Give the user an **intuitive mental model** of the module (or wiring) under inqu
 
 ## 1. Inspect context
 
-Identify the module or surface under inquiry from the current conversation and any referenced files or directories. Search and read the working tree as needed (Grep, Glob, Read). Do not ask the user to repeat information already available.
+Resolve **Scope** in this order — do not ask which module, and do not guess among sibling modules:
+
+1. Explicit file/dir or named module from the user → that surface
+2. Else clear focus already established in the conversation → that surface
+3. Else → the **whole repository** (product-level architecture: how major pieces connect)
+
+Search and read the working tree as needed (Grep, Glob, Read). Do not ask the user to repeat information already available.
+
+Whole-repo briefings use the same template; Future directions then apply to the product as a whole.
 
 ## 2. Extract
 

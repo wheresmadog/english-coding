@@ -24,7 +24,7 @@ All skills set `disable-model-invocation: true` — they run only on explicit `/
 ### code-to-conv (`/code-to-conv`)
 Builds an intuitive briefing of a module under inquiry: how it is wired (architecture & mechanisms), then candidate future directions (quality improvements or useful features for that module). Does not create issues or edit code. Suggests `/conv-to-issue` when ready to freeze work.
 
-On the first turn a conversation invokes the skill, fills in `templates/conv.md`: **Scope**, **Architecture & mechanisms** (mental-model prose, not a flat fact list), then **Future directions** grouped by candidate key change (`### <name>: <one sentence>`, same naming style `/conv-to-issue` later freezes). Later turns in the same conversation continue as normal discussion instead of re-rendering the template.
+On the first turn a conversation invokes the skill, fills in `templates/conv.md`: **Scope**, **Architecture & mechanisms** (mental-model prose, not a flat fact list), then **Future directions** grouped by candidate key change (`### <name>: <one sentence>`, same naming style `/conv-to-issue` later freezes). Scope resolves to an explicit path/module, else conversational focus, else the whole repo. Later turns in the same conversation continue as normal discussion instead of re-rendering the template.
 
 ### conv-to-issue (`/conv-to-issue`)
 Interview → draft from `templates/issue.md` → approval loop → `gh issue create`. Stops after the issue exists (no worktree, no plan mode).
