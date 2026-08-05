@@ -9,6 +9,19 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/telegram-notify.sh",
+            "args": [],
+            "async": true,
+            "timeout": 15
+          }
+        ]
+      }
     ]
   }
 }
