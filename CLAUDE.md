@@ -1,6 +1,6 @@
 # english-coding
 
-A Claude Code plugin that ships four composable workflow skills around **code ↔ conv/plan ↔ issue**. Skills are plain markdown files — no compilation. A separate session-start hook, unscoped to any skill, fires once per session and requires `jq`.
+A Claude Code plugin that ships four composable workflow skills around **code ↔ conv/plan ↔ issue**. Skills are plain markdown files — no compilation. Plugin-level hooks provide a session-start documentation reminder and opt-in Telegram notifications after completed responses.
 
 ## Model
 
@@ -66,11 +66,14 @@ skills/conv-to-code/SKILL.md
 skills/issue-to-code/SKILL.md
 hooks/hooks.json                        # plugin-level hook registry, auto-discovered
 hooks/doc-scoping-context.sh            # SessionStart hook (requires jq)
+hooks/telegram-notify.sh                # Stop hook (opt-in via environment)
 ```
 
 `doc-scoping-context.sh` is registered under `SessionStart` in `hooks/hooks.json` with no `matcher`, so it fires once per session (startup/resume/clear) regardless of which skill, if any, is invoked.
 
-`hooks/` is intentionally not mirrored under `.cursor-plugin/` — Cursor has no confirmed per-prompt hook equivalent to `UserPromptExpansion`/`PreToolUse`/`SessionStart` (its confirmed hook surface is a `workspaceOpen` hook, firing once per workspace rather than per-prompt). Under Cursor, the doc-scoping context never gets injected — the same fallback path the hook already exercises when `jq` is missing (see Constraints below).
+`telegram-notify.sh` is registered as an asynchronous `Stop` hook. It exits successfully without side effects unless both `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are present. It estimates context from the latest transcript usage record and reads plan-block information from `ccusage`, tolerating current and legacy JSON layouts.
+
+`hooks/` is intentionally not mirrored under `.cursor-plugin/` — Cursor has no confirmed equivalents for Claude Code's `SessionStart` and `Stop` hooks. Under Cursor, neither plugin hook runs.
 
 Manifest format references: [Claude Code plugins](https://code.claude.com/docs/en/plugins) for `.claude-plugin/plugin.json`, [Cursor plugins](https://cursor.com/docs/plugins) (field reference: [cursor.com/docs/reference/plugins](https://cursor.com/docs/reference/plugins)) for `.cursor-plugin/plugin.json`.
 
@@ -117,3 +120,5 @@ Public: https://github.com/wheresmadog/english-coding
 - Session rename has no programmatic path — execute skills suggest `/rename issue-<N>`. Hooks can only set a title at `SessionStart`, which `EnterWorktree` does not trigger.
 - `.claude/settings.local.json` contains a local `ANTHROPIC_BASE_URL` override — do not commit this file to a public repo.
 - `hooks/doc-scoping-context.sh` requires `jq`; it degrades to a no-op (exit 1, stderr note) if `jq` is missing, meaning the session simply starts without the doc-scoping context.
+- `hooks/telegram-notify.sh` requires `jq` and `curl` once configured. `ccusage` and `node` are optional: without usable block data, the message reports plan usage and reset time as `n/a`.
+- Telegram credentials are runtime-only environment variables. Never put bot tokens or chat IDs in plugin files, committed settings, test fixtures, or command output.
