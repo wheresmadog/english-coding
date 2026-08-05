@@ -9,6 +9,7 @@ chat_id=${TELEGRAM_CHAT_ID:-}
 if [[ -z "$token" || -z "$chat_id" ]]; then
   exit 0
 fi
+unset TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "telegram-notify hook: jq not found, skipping" >&2
@@ -109,10 +110,14 @@ Context: $context_info
 Usage: ${usage_percent}% (reset in $reset_in)"
 
 if ! curl --silent --show-error --fail --max-time 10 \
-  -X POST "https://api.telegram.org/bot${token}/sendMessage" \
+  -X POST \
+  --config - \
   --data-urlencode "chat_id=${chat_id}" \
   --data-urlencode "text=${message}" \
-  >/dev/null; then
+  >/dev/null <<EOF
+url = "https://api.telegram.org/bot${token}/sendMessage"
+EOF
+then
   echo "telegram-notify hook: Telegram request failed" >&2
 fi
 
